@@ -1,1 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Doll Clothing Preference Quiz</title>
+    <meta name="description" content="Discover your perfect OOAK fashion doll clothing style with our interactive quiz">
+    <meta name="keywords" content="fashion doll, OOAK, clothing, quiz, style preferences">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #786fa6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-title {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .quiz-subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+        }
+
+        .question {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #ffeef8 0%, #f8f4ff 100%);
+            border: 2px solid #e9d5ff;
+            border-radius: 15px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border-color: #ff6b9d;
+            transform: translateY(-3px);
+            color: white;
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+            accent-color: #ff6b9d;
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border-color: #ff6b9d;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #786fa6 100%);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 107, 157, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffeef8 0%, #f8f4ff 100%);
+            border-radius: 20px;
+            margin-top: 25px;
+            border: 2px solid #e9d5ff;
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            margin: 8px 0;
+            border-radius: 12px;
+            border-left: 5px solid #ff6b9d;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #ff6b9d, #c44569);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 4px;
+        }
+
+        .question-number {
+            color: #ff6b9d;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .question-number::before {
+            content: '✨';
+            margin-right: 8px;
+        }
+
+        .doll-emoji {
+            font-size: 1.5em;
+            margin: 0 8px;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffcdd2;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c8e6c9;
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .share-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .share-btn {
+            background: #4267B2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .share-btn.twitter {
+            background: #1DA1F2;
+        }
+
+        .share-btn.copy {
+            background: #333;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-title {
+                font-size: 2em;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .option {
+                padding: 15px;
+            }
+
+            .share-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .share-btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <div class="quiz-header">
+            <h1 class="quiz-title">Fashion Doll Style Quiz</h1>
+            <p class="quiz-subtitle">Help us create the perfect OOAK outfits for your 16" fashion dolls! <span class="doll-emoji">👗</span> Tell us about your style preferences <span class="doll-emoji">💖</span></p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <form id="quizForm">
+            <div class="question-container">
+                <div class="question-number">Question 1 of 8</div>
+                <div class="question">Which outfit category do you find most appealing for your fashion dolls?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q1" value="lingerie" required>
+                        💋 Lingerie - Delicate, intimate pieces with lace and silk details
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="casual" required>
+                        👕 Casual Modern - Contemporary everyday wear with trendy touches
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="classic" required>
+                        👗 Classic Dresses - Timeless, elegant pieces that never go out of style
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="evening" required>
+                        ✨ Evening Gowns - Glamorous, formal wear for special occasions
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="romantic" required>
+                        🌹 Romantic Outfits - Soft, feminine pieces with vintage charm
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Question 2 of 8</div>
+                <div class="question">What's your preferred color palette for doll clothing?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q2" value="pastels" required>
+                        🌸 Soft pastels (blush pink, lavender, mint green)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="jewel" required>
+                        💎 Rich jewel tones (emerald, sapphire, ruby)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="neutral" required>
+                        🤍 Neutral elegance (cream, beige, champagne)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="bold" required>
+                        🔥 Bold & vibrant (hot pink, electric blue, sunset orange)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="monochrome" required>
+                        🖤 Classic monochrome (black, white, silver)
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Question 3 of 8</div>
+                <div class="question">What level of detail do you prefer in doll outfits?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q3" value="minimalist" required>
+                        ✨ Clean & minimalist - Simple elegance with perfect fit
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="moderate" required>
+                        💫 Moderate detail - Some embellishments and interesting textures
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="elaborate" required>
+                        🎭 Highly detailed - Intricate beading, embroidery, and accessories
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="mixed" required>
+                        🌈 It depends on the outfit style and occasion
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Question 4 of 8</div>
+                <div class="question">Which fabric types appeal to you most?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q4" value="luxurious" required>
+                        💎 Luxurious fabrics (silk, satin, velvet, brocade)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="delicate" required>
+                        🌸 Delicate materials (lace, tulle, chiffon, organza)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="textured" required>
+                        🎨 Textured fabrics (tweed, jacquard, embossed materials)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="contemporary" required>
+                        ✨ Contemporary blends (high-quality synthetics, mixed materials)
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Question 5 of 8</div>
+                <div class="question">How important are matching accessories?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q5" value="essential" required>
+                        💍 Essential - Complete sets with shoes, jewelry, and bags
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="some" required>
+                        👜 Some accessories - A few key pieces to complement the outfit
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="minimal" required>
+                        ✨ Minimal accessories - Let the clothing be the star
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="flexible" required>
+                        🌟 Flexible - Depends on the outfit and my mood
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Question 6 of 8</div>
+                <div class="question">What's your preferred price range for OOAK doll outfits?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q6" value="budget" required>
+                        💝 Budget-friendly ($15-30)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="moderate" required>
+                        💖 Moderate range ($30-60)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="premium" required>
+                        💎 Premium quality ($60-100)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="collector" required>
+                        👑 Collector's piece ($100+)
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Question 7 of 8</div>
+                <div class="question">Which era or style inspiration appeals to you most?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q7" value="vintage" required>
+                        🌹 Vintage inspired (1920s-1960s glamour)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="modern" required>
+                        🏙️ Contemporary modern (current fashion trends)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="fantasy" required>
+                        🦄 Fantasy & fairytale (magical, whimsical designs)
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="timeless" required>
+                        ⚡ Timeless elegance (classic styles that transcend eras)
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">Question 8 of 8</div>
+                <div class="question">How often do you purchase outfits for your fashion dolls?</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q8" value="monthly" required>
+                        📅 Monthly - I love updating their wardrobe regularly
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="seasonal" required>
+                        🌸 Seasonally - A few times a year for special occasions
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="special" required>
+                        ✨ For special pieces - When I find something truly unique
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="collector" required>
+                        💎 Collector mindset - Quality over quantity, rare purchases
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>✨ Complete Quiz ✨</button>
+        </form>
+
+        <div class="results" id="results">
+            <h3>🎉 Thank you for sharing your style preferences!</h3>
+            <p>Your responses help me create the perfect OOAK outfits for your fashion dolls. Here's your style profile:</p>
+            <div id="resultsSummary"></div>
+            <div class="share-buttons">
+                <button class="share-btn" onclick="shareOnFacebook()">Share on Facebook</button>
+                <button class="share-btn twitter" onclick="shareOnTwitter()">Share on Twitter</button>
+                <button class="share-btn copy" onclick="copyLink()">Copy Link</button>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
+                💝 Your preferences are noted and will inspire future creations! Keep an eye on my eBay listings for pieces that match your style. 👗✨
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Store quiz responses
+        let quizResponses = {};
+        
+        // Error handling and messaging
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const totalQuestions = 8;
+            const answeredQuestions = Object.keys(quizResponses).length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Handle radio button changes
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove selected class from all options in this question
+                const questionName = this.name;
+                document.querySelectorAll(`input[name="${questionName}"]`).forEach(r => {
+                    r.closest('.option').classList.remove('selected');
+                });
+                
+                // Add selected class to chosen option
+                this.closest('.option').classList.add('selected');
+                
+                // Store response
+                quizResponses[questionName] = this.value;
+                
+                // Update progress
+                updateProgress();
